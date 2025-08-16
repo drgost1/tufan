@@ -2,8 +2,8 @@ fx_version 'cerulean'
 game 'gta5'
 
 author 'Tufan Studio'
-description 'Aircraft Carrier Heist Script'
-version '1.0.2'
+description 'Bridge System between Resources'
+version '1.0.1'
 
 shared_scripts {
     'config.lua',
