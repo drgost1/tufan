@@ -137,6 +137,7 @@ local dead = exports.tufan:IsDead()
 | `RegisterUsableItem(item, cb)` | Register usable item | ox_inventory exports style if present. |
 | `GetMoney(playerId, account)` | Get account balance | 'money' maps to cash. |
 | `RemoveMoney(playerId, account, amount)` | Deduct funds | ox_core uses get/set fallback. |
+| `AddMoney(playerId, account, amount)` | Add funds | 'money' maps to cash; ox_core uses get/set. |
 
 ### Usage Examples
 ```lua
@@ -168,6 +169,7 @@ local cash = exports.tufan:GetMoney(src, 'money')
 if cash >= 500 then
   exports.tufan:RemoveMoney(src, 'money', 500)
 end
+exports.tufan:AddMoney(src, 'money', 250) -- give $250 cash
 ```
 
 Register usable item:

@@ -380,6 +380,32 @@ function RemoveMoney(src, account, amount)
 end
 exports('RemoveMoney', RemoveMoney)
 
+-- Add money (cash/bank) unified
+function AddMoney(src, account, amount)
+	amount = tonumber(amount) or 0
+	if amount <= 0 then return false end
+	local p = getPlayer(src)
+	if not p then return false end
+	local acc = account == 'money' and 'cash' or account -- canonical internal
+	if ACTIVE == 'qb-core' or ACTIVE == 'qbx_core' then
+		return p.Functions.AddMoney(acc, amount)
+	elseif ACTIVE == 'es_extended' then
+		if acc == 'cash' or acc == 'money' then
+			p.addMoney(amount)
+		else
+			p.addAccountMoney(acc, amount)
+		end
+		return true
+	elseif ACTIVE == 'ox_core' then
+		local current = p.get(acc) or 0
+		if type(current) ~= 'number' then return false end
+		p.set(acc, current + amount)
+		return true
+	end
+	return false
+end
+exports('AddMoney', AddMoney)
+
 -- (Optional) Provide a table export aggregator if needed elsewhere internally
 tufan.framework = ACTIVE
 
