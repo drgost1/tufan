@@ -15,6 +15,11 @@ client_scripts {
     'client/*.lua'
 }
 
-server_script 'server/sv.lua'
+server_scripts {
+    'server/framework.lua',
+    'server/sv.lua'
+}
+
+-- (Server exports are defined inline via exports(...) in server/framework.lua)
 
 lua54 'yes'

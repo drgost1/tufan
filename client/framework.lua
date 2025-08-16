@@ -14,7 +14,7 @@ else
 end
 
 -- Core functions
-function Framework.bridgeNotify(msg, type, duration)
+function Framework.Notify(msg, type, duration)
     if Framework.ESX then
         Framework.ESX.ShowNotification(msg, type, duration)
     elseif Framework.QBCore then
@@ -98,85 +98,21 @@ function Framework.IsDead()
 end
 
 -- Improved version of GetConvertedClothes based on the working code
-local function GetConvertedClothes(oldClothes)
-    local clothes = {
-        mask = {item = oldClothes.mask_1 or 0, texture = oldClothes.mask_2 or 0},
-        arms = {item = oldClothes.arms or 0, texture = 0},
-        tshirt = {item = oldClothes.tshirt_1 or 0, texture = oldClothes.tshirt_2 or 0},
-        torso = {item = oldClothes.torso_1 or 0, texture = oldClothes.torso_2 or 0},
-        torso2 = {item = oldClothes.decals_1 or 0, texture = oldClothes.decals_2 or 0},
-        pants = {item = oldClothes.pants_1 or 0, texture = oldClothes.pants_2 or 0},
-        shoes = {item = oldClothes.shoes_1 or 0, texture = oldClothes.shoes_2 or 0},
-        bag = {item = oldClothes.bags_1 or 0, texture = oldClothes.bags_2 or 0},
-        hat = {item = oldClothes.helmet_1 or -1, texture = oldClothes.helmet_2 or 0},
-        glass = {item = oldClothes.glasses_1 or 0, texture = oldClothes.glasses_2 or 0},
-        ear = {item = oldClothes.ears_1 or 0, texture = oldClothes.ears_2 or 0},
-        watch = {item = oldClothes.watches_1 or 0, texture = oldClothes.watches_2 or 0},
-        bracelet = {item = oldClothes.bracelets_1 or 0, texture = oldClothes.bracelets_2 or 0},
-        accessory = {item = oldClothes.chain_1 or 0, texture = oldClothes.chain_2 or 0},
-        vest = {item = oldClothes.bproof_1 or 0, texture = oldClothes.bproof_2 or 0}
-    }
-    
-    return {
-        outfitData = clothes,
-        model = GetEntityModel(PlayerPedId())
-    }
-end
-
-function Framework.SetOutfit(outfit)
-    if Framework.ESX then
-        if outfit then
-            Framework.ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
-                TriggerEvent('skinchanger:loadClothes', skin, outfit)
-            end)
-        else
-            Framework.ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
-                TriggerEvent('skinchanger:loadSkin', skin)
-            end)
-        end
-    elseif Framework.QBCore then
-        if outfit then
-            local converted = GetConvertedClothes(outfit)
-            TriggerEvent('qb-clothing:client:loadOutfit', converted)
-        else
-            TriggerServerEvent("qb-clothes:loadPlayerSkin")
-        end
-    elseif Framework.QBX then
-        if outfit then
-            local converted = GetConvertedClothes(outfit)
-            exports['qb-clothing']:setOutfit(converted)
-        else
-            TriggerServerEvent("qb-clothes:loadPlayerSkin")
-        end
-    elseif Framework.Ox then
-        -- OX Core implementation
-        if outfit then
-            local ped = PlayerPedId()
-            for component, data in pairs(GetConvertedClothes(outfit).outfitData) do
-                SetPedComponentVariation(ped, Config.Components[component], data.item, data.texture, 0)
-            end
-        else
-            TriggerServerEvent('ox_appearance:loadOutfit', 'default')
-        end
-    end
-end
 -- Public surface
 local TufanFramework = {
-    bridgeNotify = Framework.bridgeNotify,
+    Notify = Framework.Notify,
     GetPlayerGroups = Framework.GetPlayerGroups,
     GetPlayerGroupInfo = Framework.GetPlayerGroupInfo,
     GetSex = Framework.GetSex,
-    IsDead = Framework.IsDead,
-    SetOutfit = Framework.SetOutfit
+    IsDead = Framework.IsDead
 }
 
 -- Exports for other resources (client-side)
-exports('bridgeNotify', Framework.bridgeNotify)
+exports('Notify', Framework.Notify)
 exports('GetPlayerGroups', Framework.GetPlayerGroups)
 exports('GetPlayerGroupInfo', Framework.GetPlayerGroupInfo)
 exports('GetSex', Framework.GetSex)
 exports('IsDead', Framework.IsDead)
-exports('SetOutfit', Framework.SetOutfit)
 
 -- Return module
 return TufanFramework
